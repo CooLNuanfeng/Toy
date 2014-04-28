@@ -2,6 +2,7 @@
 from wand.image import Image
 import os
 import re
+import time
 
 # set the image file extension you want to compression
 file_type_reg = "(.jpg|.png)$"
@@ -59,5 +60,8 @@ def recursion(path):
                 compression(_path);
 
 if __name__ == "__main__":
+    start_time = int(time.time())
     mkdir_p(target)
     recursion(source)
+    end_time = int(time.time())
+    print "image compression completed, cost " + str(end_time - start_time) + " seconds."
