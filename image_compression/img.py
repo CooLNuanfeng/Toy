@@ -3,6 +3,7 @@ from wand.image import Image
 import os
 import re
 import time
+import shutil
 
 # set the image file extension you want to compression
 file_type_reg = "(.jpg|.png)$"
@@ -47,6 +48,10 @@ def compression(source_path):
         _img.save(filename = _target_path)
         print "File: " + _target_path + " saved!"
 
+def copy_file(cp_path):
+    _target_path = re.sub(r"^" + re.escape(source), target, cp_path);
+    shutil.copy2(cp_path, _target_path)
+    print "File: " + _target_path + " copied!"
 
 def recursion(path):
     file_list = os.listdir(path)
@@ -57,7 +62,10 @@ def recursion(path):
         else:
             # validate file type
             if len(re.findall(file_type_reg, _path)) == 1:
-                compression(_path);
+                compression(_path)
+            else:
+                # if file is not matched, just execution copy operation
+                copy_file(_path)
 
 if __name__ == "__main__":
     start_time = int(time.time())
