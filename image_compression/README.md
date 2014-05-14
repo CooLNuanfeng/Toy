@@ -7,4 +7,4 @@ Python图片压缩
 
 ###example
 
-执行命令：`$ python img.py`
+执行命令：`$ python img.py`，默认输出目录为`target`
