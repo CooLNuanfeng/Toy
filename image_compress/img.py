@@ -14,6 +14,12 @@ source = "./images/"
 # compression images output target path
 target = "./target/"
 
+# record operating log
+log = "./log/"
+
+# if file size greater than this value, record to log
+larger_file = 5000
+
 # max witdh
 max_width = 930
 
@@ -32,12 +38,15 @@ def mkdir_p(path):
 def compression(source_path):
     try:
         with Image(filename = source_path) as img:
-            print source_path
+            _file_size = os.path.getsize(source_path)
+            if _file_size > larger_file:
+                larger_list.write(source_path + "\n");
             _img = img.clone()
             # get image width
             _img_width = _img.width
             _img_height = _img.height
             if _img.width > max_width:
+                resize_list.write(source_path + "\n")
                 # resize image
                 _proportion = float(_img_width)/float(max_width)
                 _img.resize(max_width, int(_img_height / _proportion));
@@ -50,6 +59,7 @@ def compression(source_path):
             _img.save(filename = _target_path)
             print "File: " + _target_path + " saved!"
     except:
+        error_list.write(source_path + "\n");
         copy_file(source_path)
 
 def copy_file(cp_path):
@@ -72,11 +82,17 @@ def recursion(path):
                 compression(_path)
             else:
                 # if file is not matched, just execution copy operation
+                other_list.write(_path + "\n");
                 copy_file(_path)
 
 if __name__ == "__main__":
-    start_time = int(time.time())
     mkdir_p(target)
+    mkdir_p(log)
+    error_list = open(log + "error_list", "aw+")
+    larger_list = open(log + "larger_list", "aw+")
+    other_list = open(log + "other_list", "aw+")
+    resize_list = open(log + "resize_list", "aw+")
+    start_time = int(time.time())
     recursion(source)
     end_time = int(time.time())
     print "image compression completed, cost " + str(end_time - start_time) + " seconds."
