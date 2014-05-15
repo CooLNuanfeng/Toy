@@ -6,7 +6,7 @@ import time
 import shutil
 
 # set the image file extension you want to compression
-file_type_reg = "(.jpg|.png)$"
+file_type_reg = "(.jpg|.png|.JPG|.PNG)$"
 
 # source folder path
 source = "./images/"
@@ -30,26 +30,33 @@ def mkdir_p(path):
     os.mkdir(path)
 
 def compression(source_path):
-    with Image(filename = source_path) as img:
-        _img = img.clone()
-        # get image width
-        _img_width = _img.width
-        _img_height = _img.height
-        if _img.width > max_width:
-            # resize image
-            _proportion = float(_img_width)/float(max_width)
-            _img.resize(max_width, int(_img_height / _proportion));
-        # reset image quality
-        _img.compression_quality = compression_quality
-        _target_path = re.sub(r"^" + re.escape(source), target, source_path);
-        _dir = os.path.split(_target_path)[0]
-        if os.path.isdir(_dir) is False:
-            os.makedirs(_dir)
-        _img.save(filename = _target_path)
-        print "File: " + _target_path + " saved!"
+    try:
+        with Image(filename = source_path) as img:
+            print source_path
+            _img = img.clone()
+            # get image width
+            _img_width = _img.width
+            _img_height = _img.height
+            if _img.width > max_width:
+                # resize image
+                _proportion = float(_img_width)/float(max_width)
+                _img.resize(max_width, int(_img_height / _proportion));
+            # reset image quality
+            _img.compression_quality = compression_quality
+            _target_path = re.sub(r"^" + re.escape(source), target, source_path);
+            _dir = os.path.split(_target_path)[0]
+            if os.path.isdir(_dir) is False:
+                os.makedirs(_dir)
+            _img.save(filename = _target_path)
+            print "File: " + _target_path + " saved!"
+    except:
+        copy_file(source_path)
 
 def copy_file(cp_path):
     _target_path = re.sub(r"^" + re.escape(source), target, cp_path);
+    _path = os.path.dirname(_target_path)
+    if not os.path.exists(_path):
+        os.mkdir(_path)
     shutil.copy2(cp_path, _target_path)
     print "File: " + _target_path + " copied!"
 
