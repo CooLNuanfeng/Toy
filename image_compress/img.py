@@ -66,7 +66,7 @@ def copy_file(cp_path):
     _target_path = re.sub(r"^" + re.escape(source), target, cp_path);
     _path = os.path.dirname(_target_path)
     if not os.path.exists(_path):
-        os.mkdir(_path)
+        os.makedirs(_path)
     shutil.copy2(cp_path, _target_path)
     print "File: " + _target_path + " copied!"
 
